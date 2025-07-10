@@ -327,6 +327,7 @@ namespace DataGridMAUI
             GridColumnsForGroup.AddRange(GridColumns);
             GridColumnsForSort.AddRange(GridColumns);
             GridColumns.RemoveAt(0);
+            GridColumnsForFilter.Remove(GridColumnsForFilter.FirstOrDefault(o => o.Name == "StudentID"));
             SelectedColumn = GridColumnsForFilter.FirstOrDefault();
             SelectedGroupColumn = GridColumnsForGroup.FirstOrDefault(); 
             SelectedSortColumn = GridColumnsForSort.FirstOrDefault();
@@ -439,14 +440,24 @@ namespace DataGridMAUI
         {
             if (SortColumnDescriptions == null)
                 return;
-            SortColumnDescriptions.Clear();            
+            SortColumnDescriptions.Clear();
+
+            SelectedSortColumn = null;
+
+            Application.Current?.Dispatcher.Dispatch(() =>
+            {
+                IsOpenForSortColumns = false;
+            });
         }
 
         private void ExecuteAddSorting()
         {
-            ExecuteClearSorts();
-            var sortColumnDescription = new SortColumnDescription() { ColumnName = this.SelectedSortColumn.Name, SortDirection = IsOnState ? ListSortDirection.Ascending : ListSortDirection.Descending };
-            SortColumnDescriptions.Add(sortColumnDescription);
+            if (SelectedSortColumn != null)
+            {
+                SortColumnDescriptions.Clear();
+                var sortColumnDescription = new SortColumnDescription() { ColumnName = this.SelectedSortColumn.Name, SortDirection = IsOnState ? ListSortDirection.Ascending : ListSortDirection.Descending };
+                SortColumnDescriptions.Add(sortColumnDescription);
+            }
         }
 
         // Grouping
@@ -458,14 +469,24 @@ namespace DataGridMAUI
         {
             if (GroupColumnDescriptions == null)
                 return;
-            GroupColumnDescriptions.Clear();            
+            GroupColumnDescriptions.Clear();
+
+            SelectedGroupColumn = null;
+
+            Application.Current?.Dispatcher.Dispatch(() =>
+            {
+                IsOpenForGroupColumns = false;
+            });
         }
 
         private void ExecuteAddGrouping()
         {
-            ExecuteClearGroups();
-            var groupColumnDescription = new GroupColumnDescription() { ColumnName = this.SelectedGroupColumn.Name };
-            GroupColumnDescriptions.Add(groupColumnDescription);
+            if (SelectedGroupColumn != null)
+            {
+                GroupColumnDescriptions.Clear();
+                var groupColumnDescription = new GroupColumnDescription() { ColumnName = this.SelectedGroupColumn.Name };
+                GroupColumnDescriptions.Add(groupColumnDescription);
+            }
         }
 
         // Show/Hide columns
@@ -507,7 +528,13 @@ namespace DataGridMAUI
         // Filtering
         private void ExecuteClearFilter()
         {
+            SelectedCondition = string.Empty;
+            SelectedColumn = null;
             FilterText = string.Empty;
+            Application.Current?.Dispatcher.Dispatch(() =>
+            {
+                IsOpenForFilterColumns = false;
+            });
         }
 
         private void ExecuteFilterColumns()
@@ -522,6 +549,9 @@ namespace DataGridMAUI
         /// <returns>true or false value</returns>
         public bool FilerRecords(object o)
         {
+            if (SelectedColumn == null && string.IsNullOrEmpty(this.SelectedCondition))
+                return true;
+
             double res;
             bool checkNumeric = double.TryParse(this.FilterText, out res);
             var item = o as Grade;
