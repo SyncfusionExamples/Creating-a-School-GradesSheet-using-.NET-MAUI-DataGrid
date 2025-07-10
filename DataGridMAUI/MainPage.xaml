@@ -82,13 +82,29 @@
                                 </editors:SfComboBox.ItemTemplate>
                             </editors:SfComboBox>
 
-                            <SearchBar  x:Name="filterText"
-                            BackgroundColor="Transparent"
-                            Text="{Binding FilterText}"          
-                                            WidthRequest="250"
-                            HorizontalOptions="{OnPlatform Android='StartAndExpand',WinUI='End',MacCatalyst='End',iOS='FillAndExpand'}"
-                            IsVisible="true">
-                            </SearchBar>
+                            <Border StrokeThickness="1" VerticalOptions="Center"
+                                BackgroundColor="White"
+                                HeightRequest="38"                                
+                                StrokeShape="RoundRectangle 8">
+                                <Grid ColumnDefinitions="Auto,*"
+                                      Margin="0,0,8,0">
+                                    <Label Text="&#xe728;"
+                                          FontFamily="MauiSampleFontIcon"
+                                          VerticalOptions="Center"
+                                          HorizontalOptions="Center"
+                                          FontSize="16"
+                                          Margin="10,0,12,0" />
+                                    <local:SfEntry  x:Name="filterText"
+                                                    Text="{Binding FilterText}"
+                                                   Grid.Column="1"                                                     
+                                                   BackgroundColor="Transparent"                                                                                                  
+                                                    HorizontalOptions="{OnPlatform Android='StartAndExpand',WinUI='End',MacCatalyst='End',iOS='FillAndExpand'}"
+                                                   VerticalTextAlignment="{OnPlatform Default=Start, MacCatalyst=Center, iOS=Center}"
+                                                   FontFamily="Roboto-Regular"
+                                                   FontSize="16"
+                                                   ClearButtonVisibility="Never" />
+                                </Grid>
+                            </Border>
 
                         </HorizontalStackLayout>
                     </DataTemplate>
