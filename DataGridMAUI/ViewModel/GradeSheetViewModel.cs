@@ -624,12 +624,12 @@ namespace DataGridMAUI
                     {
                         return result1;
                     }
-                    else if (condition == "NotEquals")
+                    else if (condition == "Does Not Equal")
                     {
                         return false;
                     }
                 }
-                else if (condition == "NotEquals")
+                else if (condition == "Does Not Equal")
                 {
                     return true;
                 }
@@ -676,7 +676,7 @@ namespace DataGridMAUI
                         }
 
                         break;
-                    case "NotEquals":
+                    case "Does Not Equal":
                         try
                         {
                             if (Convert.ToDouble(this.FilterText) != Convert.ToDouble(exactValue))
